@@ -21,36 +21,36 @@ async def start_handler(msg: Message):
     )
     file_ids.append(result.photo[-1].file_id)
     builder = InlineKeyboardBuilder()
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Забронировать номер",
-        callback_data="hire_room")
+        callback_data="hire_room"
     )
 
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Вызвать уборку номера",
         callback_data="call_cleaner"
-    ))
+    )
 
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Заказать еду в номер",
         callback_data="order_food"
-    ))
+    )
 
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Взять в аренду",
         callback_data="hire_something"
-    ))
+    )
 
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Посмотреть афишу",
         callback_data="look_shedule"
-    ))
+    )
 
-    builder.row(types.InlineKeyboardButton(
+    builder.button(
         text="Развлечения",
         callback_data="entertainment"
-    ))
-    #builder.adjust(sizes=20, repeat=True)
+    )
+    builder.adjust(2, 2)
     await msg.answer("Отель Кировакан находится в самом центре города Ванадзор.\n"
                      "Соответствуя высоким стандартам, отель предлагает условия для полноценного отдыха: "
                      "комфортабельные номера, начиная от категорий standart (Single/Double), заканчивая superior "
@@ -62,13 +62,35 @@ async def start_handler(msg: Message):
 
 @router.callback_query(F.data == "hire_room")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Номер забронирован")
+    room_img = FSInputFile("media/rooms/room_1.jpg")
+    await callback.message.answer_photo(
+        room_img
+    )
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="Выбрать даты",
+        callback_data="choose_dates_1"
+    )
+    builder.button(
+        text="Забронировать",
+        callback_data="final_hire_1"
+    )
+    await callback.message.answer("Двухместный номер. Раздельные кровати, холодильник, минибар.", reply_markup=builder.as_markup())
     await callback.answer()
 
 
 @router.callback_query(F.data == "call_cleaner")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Уборка вызвана")
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="Выбрать время",
+        callback_data="cleaning_time"
+    )
+    builder.button(
+        text="Оставить комментарий",
+        callback_data="cleaning_comment"
+    )
+    await callback.message.answer("Когда убрать номер?", reply_markup=builder.as_markup())
     await callback.answer()
 
 
@@ -96,8 +118,25 @@ async def hire_button_handler(callback: types.CallbackQuery):
     await callback.answer()
 
 
-@router.message()
-# Асинхронный вызов ответа на любое сообщение (отсутствует фильтр в декораторе)
-async def message_handler(msg: Message):
-    await msg.answer(msg.text)
+@router.callback_query(F.data == "choose_dates_1")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Даты выбраны")
+    await callback.answer()
 
+
+@router.callback_query(F.data == "final_hire_1")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Номер забронирован")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "cleaning_time")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Уборка запланирована")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "cleaning_comment")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Ваше мнение очень важно для нас")
+    await callback.answer()

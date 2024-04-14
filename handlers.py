@@ -75,7 +75,8 @@ async def hire_button_handler(callback: types.CallbackQuery):
         text="Забронировать",
         callback_data="final_hire_1"
     )
-    await callback.message.answer("Двухместный номер. Раздельные кровати, холодильник, минибар.", reply_markup=builder.as_markup())
+    await callback.message.answer("Двухместный номер. Раздельные кровати, холодильник, минибар.",
+                                  reply_markup=builder.as_markup())
     await callback.answer()
 
 

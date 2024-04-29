@@ -9,12 +9,15 @@ from aiogram.types import FSInputFile
 # Cоздадим объект Роутера
 router = Router()
 
+# Массив с id загруженных фото для последующего использования
+file_ids = []
+
 
 # Декоратор обеспечивает фильтрацию по полученному сообщению
 @router.message(Command("start"))
 # Асинхронный вызов ответа на команду "/start"
 async def start_handler(msg: Message):
-    file_ids = []
+    global file_ids
     hotel_img = FSInputFile("media/hotel.jpg")
     result = await msg.answer_photo(
         hotel_img
@@ -97,7 +100,26 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "order_food")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Заказ принят")
+    global file_ids
+    builder = InlineKeyboardBuilder()
+    menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
+    result = await callback.message.answer_photo(
+        menu_img
+    )
+    file_ids.append(result.photo[-1].file_id)
+    builder.button(
+        text="Сделать заказ",
+        callback_data="make_food_order"
+    )
+    builder.button(
+        text="Оплатить",
+        callback_data="food_payment"
+    )
+    builder.button(
+        text="Оставить чаевые",
+        callback_data="leave_a_tip"
+    )
+    await callback.message.answer("Наш ресторан работает с 8:00 до 01:00", reply_markup=builder.as_markup())
     await callback.answer()
 
 

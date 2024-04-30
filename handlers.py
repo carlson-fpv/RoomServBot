@@ -17,12 +17,8 @@ file_ids = []
 @router.message(Command("start"))
 # Асинхронный вызов ответа на команду "/start"
 async def start_handler(msg: Message):
-    global file_ids
     hotel_img = FSInputFile("media/hotel.jpg")
-    result = await msg.answer_photo(
-        hotel_img
-    )
-    file_ids.append(result.photo[-1].file_id)
+    await msg.answer_photo(hotel_img)
     builder = InlineKeyboardBuilder()
     builder.button(
         text="Забронировать номер",
@@ -100,13 +96,11 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "order_food")
 async def hire_button_handler(callback: types.CallbackQuery):
-    global file_ids
     builder = InlineKeyboardBuilder()
     menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
     result = await callback.message.answer_photo(
         menu_img
     )
-    file_ids.append(result.photo[-1].file_id)
     builder.button(
         text="Сделать заказ",
         callback_data="make_food_order"
@@ -125,7 +119,13 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "hire_something")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Что-нибудь найдём :)")
+    builder = InlineKeyboardBuilder()
+    menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
+    result = await callback.message.answer_photo(
+        menu_img
+    )
+    await callback.message.answer("Мы предлагаем в аренду велосипеды, лыжи, лодки и самокаты",
+                                  reply_markup=builder.as_markup())
     await callback.answer()
 
 

@@ -115,14 +115,8 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "hire_something")
 async def hire_button_handler(callback: types.CallbackQuery):
-    bike_img = FSInputFile("media/activity/bike.jpg")
-    boat_img = FSInputFile("media/activity/boat.jpg")
-    scooter_img = FSInputFile("media/activity/scooter.jpg")
-    ski_img = FSInputFile("media/activity/ski.jpg")
-    await callback.message.answer_photo(bike_img)
-    await callback.message.answer_photo(boat_img)
-    await callback.message.answer_photo(scooter_img)
-    await callback.message.answer_photo(ski_img)
+    activities_img = FSInputFile("media/activity/activities.jpg")
+    await callback.message.answer_photo(activities_img)
     builder = InlineKeyboardBuilder()
     builder.button(
         text="Забронировать велосипед",

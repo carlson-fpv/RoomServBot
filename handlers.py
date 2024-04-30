@@ -62,9 +62,7 @@ async def start_handler(msg: Message):
 @router.callback_query(F.data == "hire_room")
 async def hire_button_handler(callback: types.CallbackQuery):
     room_img = FSInputFile("media/rooms/room_1.jpg")
-    await callback.message.answer_photo(
-        room_img
-    )
+    await callback.message.answer_photo(room_img)
     builder = InlineKeyboardBuilder()
     builder.button(
         text="Выбрать даты",
@@ -98,9 +96,7 @@ async def hire_button_handler(callback: types.CallbackQuery):
 async def hire_button_handler(callback: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
     menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
-    result = await callback.message.answer_photo(
-        menu_img
-    )
+    await callback.message.answer_photo(menu_img)
     builder.button(
         text="Сделать заказ",
         callback_data="make_food_order"
@@ -119,10 +115,30 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "hire_something")
 async def hire_button_handler(callback: types.CallbackQuery):
+    bike_img = FSInputFile("media/activity/bike.jpg")
+    boat_img = FSInputFile("media/activity/boat.jpg")
+    scooter_img = FSInputFile("media/activity/scooter.jpg")
+    ski_img = FSInputFile("media/activity/ski.jpg")
+    await callback.message.answer_photo(bike_img)
+    await callback.message.answer_photo(boat_img)
+    await callback.message.answer_photo(scooter_img)
+    await callback.message.answer_photo(ski_img)
     builder = InlineKeyboardBuilder()
-    menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
-    result = await callback.message.answer_photo(
-        menu_img
+    builder.button(
+        text="Забронировать велосипед",
+        callback_data="bike_hire"
+    )
+    builder.button(
+        text="Забронировать лодку",
+        callback_data="boat_hire"
+    )
+    builder.button(
+        text="Забронировать самокат",
+        callback_data="scooter_hire"
+    )
+    builder.button(
+        text="Забронировать лыжи",
+        callback_data="ski_hire"
     )
     await callback.message.answer("Мы предлагаем в аренду велосипеды, лыжи, лодки и самокаты",
                                   reply_markup=builder.as_markup())

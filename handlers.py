@@ -134,6 +134,7 @@ async def hire_button_handler(callback: types.CallbackQuery):
         text="Забронировать лыжи",
         callback_data="ski_hire"
     )
+    builder.adjust(2, 2)
     await callback.message.answer("Мы предлагаем в аренду велосипеды, лыжи, лодки и самокаты",
                                   reply_markup=builder.as_markup())
     await callback.answer()

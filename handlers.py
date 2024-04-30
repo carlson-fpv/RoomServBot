@@ -192,3 +192,34 @@ async def hire_button_handler(callback: types.CallbackQuery):
 async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Благодарим за чаевые")
     await callback.answer()
+
+
+@router.callback_query(F.data == "bike_hire")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Велосипед забронирован")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "boat_hire")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Лодка забронирована")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "scooter_hire")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Самокат забронирован")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "ski_hire")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Лыжи забронированы")
+    await callback.answer()
+
+'''
+@router.callback_query(F.data == "")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("")
+    await callback.answer()
+'''

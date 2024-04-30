@@ -153,7 +153,18 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "entertainment")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Нарды или нарды?")
+    logo_img = FSInputFile("media/quests/adv_logo.jpg")
+    await callback.message.answer_photo(logo_img)
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="Подъём на Старбакс",
+        callback_data="starbucks_uphill"
+    )
+    builder.button(
+        text="Городские холмы",
+        callback_data="town_hills"
+    )
+    await callback.message.answer("Предлагаем Вашему вниманию интересные маршруты:")
     await callback.answer()
 
 

@@ -163,3 +163,21 @@ async def hire_button_handler(callback: types.CallbackQuery):
 async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Ваше мнение очень важно для нас")
     await callback.answer()
+
+
+@router.callback_query(F.data == "make_food_order")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Ваш заказ принят")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "food_payment")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Оплата принята")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "leave_a_tip")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Благодарим за чаевые")
+    await callback.answer()

@@ -1,14 +1,11 @@
 import typing_extensions
 from aiogram import types, F, Router
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import FSInputFile
-
 
 # Cоздадим объект Роутера
 router = Router()
-
 # Массив с id загруженных фото для последующего использования
 file_ids = []
 
@@ -142,7 +139,15 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "look_shedule")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Какой телевизор, иди гулять!")
+    event_img = FSInputFile("media/poster/event_1.jpg")
+    await callback.message.answer_photo(event_img)
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="Пойду!",
+        callback_data="register_in_event"
+    )
+    await callback.message.answer('В среду 1 мая в Ботаническом саду Ванадзора состоится '
+                                  'спортивный праздник для детей: "Весёлые старты"!', reply_markup=builder.as_markup())
     await callback.answer()
 
 
@@ -215,6 +220,12 @@ async def hire_button_handler(callback: types.CallbackQuery):
 @router.callback_query(F.data == "ski_hire")
 async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Лыжи забронированы")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "register_in_event")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Вы зарегистрированы!")
     await callback.answer()
 
 '''

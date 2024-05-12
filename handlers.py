@@ -164,7 +164,8 @@ async def hire_button_handler(callback: types.CallbackQuery):
         text="Городские холмы",
         callback_data="town_hills"
     )
-    await callback.message.answer("Предлагаем Вашему вниманию интересные маршруты:")
+    await callback.message.answer("Предлагаем Вашему вниманию интересные маршруты:",
+                                  reply_markup=builder.as_markup())
     await callback.answer()
 
 
@@ -239,6 +240,17 @@ async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Вы зарегистрированы!")
     await callback.answer()
 
+
+@router.callback_query(F.data == "starbucks_uphill")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "town_hills")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Данный маршрут находится в разработке")
+    await callback.answer()
 '''
 @router.callback_query(F.data == "")
 async def hire_button_handler(callback: types.CallbackQuery):

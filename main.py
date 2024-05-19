@@ -4,18 +4,14 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-
-import config
 from handlers import router
+import config
 
-
-bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.HTML)
-dp = Dispatcher(storage=MemoryStorage())
 
 async def main():
 	# Создаём объект Бота с HTML разметкой и объект Диспетчера
-
-
+	bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.HTML)
+	dp = Dispatcher(storage=MemoryStorage())
 	# Прдключаем к Диспетчеру обработчики router
 	dp.include_router(router)
 

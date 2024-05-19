@@ -3,7 +3,6 @@ from aiogram import types, F, Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from main import bot
 from keyboards import keyboard
 
 # Cоздадим объект Роутера
@@ -93,9 +92,7 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "order_food_webapp")
 async def food_button_handler(callback: types.CallbackQuery):
-    await bot.send_message(callback.chat.id,
-                           "Меню ресторана",
-                           reply_markup=keyboard)
+    await callback.message.answer("Меню ресторана", reply_markup=keyboard)
 '''
 async def hire_button_handler(callback: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
@@ -116,6 +113,7 @@ async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Наш ресторан работает с 8:00 до 01:00", reply_markup=builder.as_markup())
     await callback.answer()
 '''
+
 
 @router.callback_query(F.data == "hire_something")
 async def hire_button_handler(callback: types.CallbackQuery):

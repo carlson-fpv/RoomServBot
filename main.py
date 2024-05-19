@@ -9,10 +9,12 @@ import config
 from handlers import router
 
 
+bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher(storage=MemoryStorage())
+
 async def main():
 	# Создаём объект Бота с HTML разметкой и объект Диспетчера
-	bot = Bot(token=config.BOT_TOKEN, parse_mode=ParseMode.HTML)
-	dp = Dispatcher(storage=MemoryStorage())
+
 
 	# Прдключаем к Диспетчеру обработчики router
 	dp.include_router(router)

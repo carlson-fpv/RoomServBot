@@ -2,13 +2,18 @@ import typing_extensions
 from aiogram import types, F, Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from keyboards import keyboard
+from datetime import datetime
+from calendar import monthrange
 
 # Cоздадим объект Роутера
 router = Router()
 # Массив с id загруженных фото для последующего использования
 file_ids = []
+month_name = {1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
+              5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
+              9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"}
 
 
 # Декоратор обеспечивает фильтрацию по полученному сообщению
@@ -66,10 +71,11 @@ async def hire_button_handler(callback: types.CallbackQuery):
         text="Выбрать даты",
         callback_data="choose_dates_1"
     )
+    '''
     builder.button(
         text="Забронировать",
         callback_data="final_hire_1"
-    )
+    )'''
     await callback.message.answer("Двухместный номер. Раздельные кровати, холодильник, минибар.",
                                   reply_markup=builder.as_markup())
     await callback.answer()
@@ -174,9 +180,18 @@ async def hire_button_handler(callback: types.CallbackQuery):
     await callback.answer()
 
 
+# Handler for displaying dates when room is hiring
 @router.callback_query(F.data == "choose_dates_1")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Даты выбраны")
+    builder = InlineKeyboardBuilder()
+    days_count = monthrange(datetime.now().year, datetime.now().month)[1]
+    builder.button(text="<==", callback_data="switch_month_back")
+    builder.button(text=month_name[datetime.now().month] + ' ' + str(datetime.now().year), callback_data="_")
+    builder.button(text="==>", callback_data="switch_month_fwd")
+    for i in range(1, days_count + 1):
+        builder.button(text=str(i), callback_data="date_checked")
+    builder.adjust(3, 5)
+    await callback.message.answer("Выберите дату бронирования", reply_markup=builder.as_markup())
     await callback.answer()
 
 
@@ -255,6 +270,12 @@ async def hire_button_handler(callback: types.CallbackQuery):
 @router.callback_query(F.data == "town_hills")
 async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Данный маршрут находится в разработке")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "date_checked")
+async def hire_button_handler(callback: types.CallbackQuery):
+    await callback.message.answer("Дата бронирования выбрана")
     await callback.answer()
 '''
 @router.callback_query(F.data == "")

@@ -1,6 +1,6 @@
 import typing_extensions
 from aiogram import types, F, Router
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, WebAppInfo
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from keyboards import keyboard
@@ -14,6 +14,8 @@ file_ids = []
 month_name = {1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
               5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
               9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"}
+
+restaurant_app = WebAppInfo(url='https://ahotelpoint.ru')
 
 
 # Декоратор обеспечивает фильтрацию по полученному сообщению
@@ -98,7 +100,9 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "order_food_webapp")
 async def food_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Меню ресторана", reply_markup=keyboard)
+    builder = InlineKeyboardBuilder()
+    builder.button(text='Меню ресторана', web_app=restaurant_app)
+    await callback.message.answer("Что бы вы хотели заказать?", reply_markup=builder.as_markup())
 '''
 async def hire_button_handler(callback: types.CallbackQuery):
     builder = InlineKeyboardBuilder()

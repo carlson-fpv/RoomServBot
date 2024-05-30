@@ -6,7 +6,7 @@ web_app = WebAppInfo(url='https://ahotelpoint.ru')
 
 keyboard = ReplyKeyboardMarkup(
 	keyboard=[
-		[types.KeyboardButton(text='Site', web_app=web_app)]
+		[types.KeyboardButton(text='Меню ресторана', web_app=web_app)]
 	],
 	resize_keyboard=True
 )

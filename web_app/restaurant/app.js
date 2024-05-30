@@ -4,6 +4,7 @@ tg.expand();
 
 tg.MainButton.text.Color = "#FFFFFF";
 tg.MainButton.color = "#2cab37";
+tg.MainButton.setText("Вы выбрали солянку");
 
 let item = "";
 
@@ -44,6 +45,6 @@ btn3.addEventListener("click", function(){
   }
 });
 
-Telegram.WebApp.onEvent("mainButtonClicked"), function() {
+Telegram.WebApp.onEvent("mainButtonClicked", function() {
   tg.sendData(item);
 })

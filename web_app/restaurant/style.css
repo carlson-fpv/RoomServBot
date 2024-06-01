@@ -41,3 +41,15 @@ body {
 .btn:hover {
   background: lightgreen;
 }
+
+.quanity-controls {
+  display: none;
+  #padding: 10px 20px;
+  #border: none;
+  #background: rgb(248, 168, 24);
+  #border-radius: 10px;
+  #color: #fff;
+  font-weight: 700;
+  font: 13pt sans-serif;
+  #transition: background .2s linear;
+}

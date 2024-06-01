@@ -2,8 +2,7 @@ import typing_extensions
 from aiogram import types, F, Router
 from aiogram.types import Message, FSInputFile, WebAppInfo
 from aiogram.filters import Command
-from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
-from keyboards import keyboard
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from datetime import datetime
 from calendar import monthrange
 
@@ -103,26 +102,7 @@ async def food_button_handler(callback: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
     builder.button(text='Меню ресторана', web_app=restaurant_app)
     await callback.message.answer("Что бы вы хотели заказать?", reply_markup=builder.as_markup())
-'''
-async def hire_button_handler(callback: types.CallbackQuery):
-    builder = InlineKeyboardBuilder()
-    menu_img = FSInputFile("media/restaurant/restaurant_menu.jpg")
-    await callback.message.answer_photo(menu_img)
-    builder.button(
-        text="Сделать заказ",
-        callback_data="make_food_order"
-    )
-    builder.button(
-        text="Оплатить",
-        callback_data="food_payment"
-    )
-    builder.button(
-        text="Оставить чаевые",
-        callback_data="leave_a_tip"
-    )
-    await callback.message.answer("Наш ресторан работает с 8:00 до 01:00", reply_markup=builder.as_markup())
     await callback.answer()
-'''
 
 
 @router.callback_query(F.data == "hire_something")

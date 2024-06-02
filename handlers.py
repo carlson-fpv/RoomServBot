@@ -1,8 +1,8 @@
 import typing_extensions
 from aiogram import types, F, Router
 from aiogram.types import Message, FSInputFile, WebAppInfo
-from aiogram.filters import Command
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.filters import Command, MagicData
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from datetime import datetime
 from calendar import monthrange
 
@@ -99,10 +99,19 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "order_food_webapp")
 async def food_button_handler(callback: types.CallbackQuery):
-    builder = InlineKeyboardBuilder()
+    builder = ReplyKeyboardBuilder()
     builder.button(text='Меню ресторана', web_app=restaurant_app)
-    await callback.message.answer("Что бы вы хотели заказать?", reply_markup=builder.as_markup())
+    await callback.message.answer("Что бы вы хотели заказать?", reply_markup=builder.as_markup(
+        resize_keyboard=True,
+        one_time_keyboard=True
+    ))
     await callback.answer()
+
+
+@router.message(lambda message: message.web_app_data)
+async def web_app_data_processing(message: Message):
+    await message.answer("Заявка на оплату " + str(message.web_app_data.data) + ' рублей принята')
+    #await message.answer()
 
 
 @router.callback_query(F.data == "hire_something")

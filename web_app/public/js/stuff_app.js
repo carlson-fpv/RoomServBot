@@ -4,10 +4,10 @@ let tg = window.Telegram.WebApp;
 
 tg.MainButton.text.Color = '#FFFFFF';
 tg.MainButton.color = '#2cab37';
-tg.BackButton.show();
+//tg.BackButton.show();
 
 var items_count = [0, 0, 0];
-var items_costs = [400, 150, 700];
+var items_costs = [300, 100, 200];
 var amount = 0;
 
 var item_0_btn = document.getElementById('item_0_btn');
@@ -31,7 +31,7 @@ const btn_class_2 = document.querySelector('.btn#item_2_btn');
 item_0_btn.addEventListener('click', function(){
   items_count[0] += 1;
   amount += items_costs[0];
-  document.getElementById('item_0_counter').innerHTML = items_count[0];
+  document.getElementById('item_0_counter').innerHTML = items_count[0] + ' ч';
   btn_class_0.style.display = 'none';
   quanity_controls_0.style.display = 'inline-block';
   console.log('items_count[0]=' + items_count[0] + ', amount=' + amount);
@@ -55,14 +55,14 @@ item_0_decr_btn.addEventListener('click', function() {
     btn_class_0.style.display = 'inline-block';
     quanity_controls_0.style.display = 'none';
   }
-  document.getElementById('item_0_counter').innerHTML = items_count[0];
+  document.getElementById('item_0_counter').innerHTML = items_count[0] + ' ч';
 });
 
 // Обработаем нажатие на кнопку увеличения количества товара
 item_0_incr_btn.addEventListener('click', function() {
   items_count[0] += 1;
   amount += items_costs[0];
-  document.getElementById('item_0_counter').innerHTML = items_count[0];
+  document.getElementById('item_0_counter').innerHTML = items_count[0] + ' ч';
   tg.MainButton.setText('Оплатить ' + amount + 'P');
 });
 
@@ -70,7 +70,7 @@ item_0_incr_btn.addEventListener('click', function() {
 item_1_btn.addEventListener('click', function(){
   items_count[1] += 1;
   amount += items_costs[1];
-  document.getElementById('item_1_counter').innerHTML = items_count[1];
+  document.getElementById('item_1_counter').innerHTML = items_count[1] + ' ч';
   btn_class_1.style.display = 'none';
   quanity_controls_1.style.display = 'inline-block';
   console.log('items_count[1]=' + items_count[1] + ', amount=' + amount);
@@ -94,14 +94,14 @@ item_1_decr_btn.addEventListener('click', function() {
     btn_class_1.style.display = 'inline-block';
     quanity_controls_1.style.display = 'none';
   }
-  document.getElementById('item_1_counter').innerHTML = items_count[1];
+  document.getElementById('item_1_counter').innerHTML = items_count[1] + ' ч';
 });
 
 // Обработаем нажатие на кнопку увеличения количества товара
 item_1_incr_btn.addEventListener('click', function() {
   items_count[1] += 1;
   amount += items_costs[1];
-  document.getElementById('item_1_counter').innerHTML = items_count[1];
+  document.getElementById('item_1_counter').innerHTML = items_count[1] + ' ч';
   tg.MainButton.setText('Оплатить ' + amount + 'P');
 });
 
@@ -109,7 +109,7 @@ item_1_incr_btn.addEventListener('click', function() {
 item_2_btn.addEventListener('click', function(){
   items_count[2] += 1;
   amount += items_costs[2];
-  document.getElementById('item_2_counter').innerHTML = items_count[2];
+  document.getElementById('item_2_counter').innerHTML = items_count[2] + ' ч';
   btn_class_2.style.display = 'none';
   quanity_controls_2.style.display = 'inline-block';
   console.log('items_count[2]=' + items_count[2] + ', amount=' + amount);
@@ -133,14 +133,14 @@ item_2_decr_btn.addEventListener('click', function() {
     btn_class_2.style.display = 'inline-block';
     quanity_controls_2.style.display = 'none';
   }
-  document.getElementById('item_2_counter').innerHTML = items_count[2];
+  document.getElementById('item_2_counter').innerHTML = items_count[2] + ' ч';
 });
 
 // Обработаем нажатие на кнопку увеличения количества товара
 item_2_incr_btn.addEventListener('click', function() {
   items_count[2] += 1;
   amount += items_costs[2];
-  document.getElementById('item_2_counter').innerHTML = items_count[2];
+  document.getElementById('item_2_counter').innerHTML = items_count[2] + ' ч';
   tg.MainButton.setText('Оплатить ' + amount + 'P');
 });
 

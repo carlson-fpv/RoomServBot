@@ -14,7 +14,8 @@ month_name = {1: "Январь", 2: "Февраль", 3: "Март", 4: "Апр�
               5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
               9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"}
 
-restaurant_app = WebAppInfo(url='https://ahotelpoint.ru')
+restaurant_app = WebAppInfo(url='https://ahotelpoint.ru/restaurant.html')
+stuff_app = WebAppInfo(url='https://ahotelpoint.ru/stuff.html')
 
 
 # Декоратор обеспечивает фильтрацию по полученному сообщению
@@ -111,11 +112,18 @@ async def food_button_handler(callback: types.CallbackQuery):
 @router.message(lambda message: message.web_app_data)
 async def web_app_data_processing(message: Message):
     await message.answer("Заявка на оплату " + str(message.web_app_data.data) + ' рублей принята')
-    #await message.answer()
 
 
 @router.callback_query(F.data == "hire_something")
 async def hire_button_handler(callback: types.CallbackQuery):
+    builder = ReplyKeyboardBuilder()
+    builder.button(text='Забронировать спортинвентарь', web_app=stuff_app)
+    await callback.message.answer("Предлагаем ознакомиться с нашим ассортиментом спортинвентаря", reply_markup=builder.as_markup(
+        resize_keyboard=True,
+        one_time_keyboard=True
+    ))
+    await callback.answer()
+'''async def hire_button_handler(callback: types.CallbackQuery):
     activities_img = FSInputFile("media/activity/activities.jpg")
     await callback.message.answer_photo(activities_img)
     builder = InlineKeyboardBuilder()
@@ -138,7 +146,7 @@ async def hire_button_handler(callback: types.CallbackQuery):
     builder.adjust(2, 2)
     await callback.message.answer("Мы предлагаем в аренду велосипеды, лыжи, лодки и самокаты",
                                   reply_markup=builder.as_markup())
-    await callback.answer()
+    await callback.answer()'''
 
 
 @router.callback_query(F.data == "look_shedule")

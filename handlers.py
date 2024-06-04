@@ -123,30 +123,6 @@ async def hire_button_handler(callback: types.CallbackQuery):
         one_time_keyboard=True
     ))
     await callback.answer()
-'''async def hire_button_handler(callback: types.CallbackQuery):
-    activities_img = FSInputFile("media/activity/activities.jpg")
-    await callback.message.answer_photo(activities_img)
-    builder = InlineKeyboardBuilder()
-    builder.button(
-        text="Забронировать велосипед",
-        callback_data="bike_hire"
-    )
-    builder.button(
-        text="Забронировать лодку",
-        callback_data="boat_hire"
-    )
-    builder.button(
-        text="Забронировать самокат",
-        callback_data="scooter_hire"
-    )
-    builder.button(
-        text="Забронировать лыжи",
-        callback_data="ski_hire"
-    )
-    builder.adjust(2, 2)
-    await callback.message.answer("Мы предлагаем в аренду велосипеды, лыжи, лодки и самокаты",
-                                  reply_markup=builder.as_markup())
-    await callback.answer()'''
 
 
 @router.callback_query(F.data == "look_shedule")

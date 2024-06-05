@@ -4,31 +4,35 @@ body {
   font-size: 18px;
   color: var(--tg-theme-text-color);
   background: var(--tg-theme-bg-color);
+
 }
 
 .container {
-  max-width: 390px;
+  #max-width: 480px;
 }
 
 .inner {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 250px 250px 250px;
+  display: flex;
+  display-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
 }
 
 .img {
-  width: 150px;
+  width: 100px;
   height: auto;
 }
 
 .item {
   text-align: center;
-  font: 13pt sans-serif;
+  font: 12pt sans-serif;
+  margin: 10px;
 }
 
 .btn {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border: none;
   background: rgb(248, 168, 24);
   border-radius: 10px;

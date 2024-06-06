@@ -1,7 +1,9 @@
 import typing_extensions
 from aiogram import types, F, Router
 from aiogram.types import Message, FSInputFile, WebAppInfo
-from aiogram.filters import Command, MagicData
+from aiogram.filters import Command, StateFilter
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from datetime import datetime
 from calendar import monthrange
@@ -18,6 +20,15 @@ restaurant_app = WebAppInfo(url='https://ahotelpoint.ru/restaurant.html')
 stuff_app = WebAppInfo(url='https://ahotelpoint.ru/stuff.html')
 
 
+class ConversationStates(StatesGroup):
+    waiting_for_cleaning_time = State()
+    waiting_for_cleaning_comment = State()
+    waiting_for_restaurant_time = State()
+    waiting_for_stuff_pickup_time = State()
+    waiting_for_restaurant_webapp_data = State()
+    waiting_for_stuff_webapp_data = State()
+
+
 # Декоратор обеспечивает фильтрацию по полученному сообщению
 @router.message(Command("start"))
 # Асинхронный вызов ответа на команду "/start"
@@ -26,27 +37,27 @@ async def start_handler(msg: Message):
     await msg.answer_photo(hotel_img)
     builder = InlineKeyboardBuilder()
     builder.button(
-        text="Забронировать номер",
+        text="Бронь номер",
         callback_data="hire_room"
     )
 
     builder.button(
-        text="Вызвать уборку номера",
+        text="Уборка номера",
         callback_data="call_cleaner"
     )
 
     builder.button(
-        text="Заказать еду в номер",
+        text="Заказ еды",
         callback_data="order_food_webapp"
     )
 
     builder.button(
-        text="Взять в аренду",
+        text="Аренда",
         callback_data="hire_something"
     )
 
     builder.button(
-        text="Посмотреть афишу",
+        text="Афиша",
         callback_data="look_shedule"
     )
 
@@ -99,9 +110,10 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 
 @router.callback_query(F.data == "order_food_webapp")
-async def food_button_handler(callback: types.CallbackQuery):
+async def food_button_handler(callback: types.CallbackQuery, state: FSMContext):
     builder = ReplyKeyboardBuilder()
     builder.button(text='Меню ресторана', web_app=restaurant_app)
+    await state.set_state(ConversationStates.waiting_for_restaurant_webapp_data)
     await callback.message.answer("Что бы вы хотели заказать?", reply_markup=builder.as_markup(
         resize_keyboard=True,
         one_time_keyboard=True
@@ -109,20 +121,45 @@ async def food_button_handler(callback: types.CallbackQuery):
     await callback.answer()
 
 
-@router.message(lambda message: message.web_app_data)
-async def web_app_data_processing(message: Message):
-    await message.answer("Заявка на оплату " + str(message.web_app_data.data) + ' рублей принята')
+@router.message(lambda message: message.web_app_data, ConversationStates.waiting_for_restaurant_webapp_data)
+async def web_app_data_processing(message: Message, state: FSMContext):
+    await state.set_state(ConversationStates.waiting_for_restaurant_time)
+    await message.answer("Заявка на оплату " + str(message.web_app_data.data) + ' рублей принята.' +
+                         '\n' + 'Во сколько принести ваш заказ? Отправьте боту время в формате ЧЧ:ММ')
+
+
+@router.message(ConversationStates.waiting_for_restaurant_time)
+async def cleaning_time_confirmation(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Спасибо, заказ принесут в " + message.text)
 
 
 @router.callback_query(F.data == "hire_something")
-async def hire_button_handler(callback: types.CallbackQuery):
+async def hire_button_handler(callback: types.CallbackQuery, state: FSMContext):
     builder = ReplyKeyboardBuilder()
     builder.button(text='Забронировать спортинвентарь', web_app=stuff_app)
-    await callback.message.answer("Предлагаем ознакомиться с нашим ассортиментом спортинвентаря", reply_markup=builder.as_markup(
-        resize_keyboard=True,
-        one_time_keyboard=True
-    ))
+    await state.set_state(ConversationStates.waiting_for_stuff_webapp_data)
+    await callback.message.answer(
+        "Предлагаем ознакомиться с нашим ассортиментом спортинвентаря",
+        reply_markup=builder.as_markup(
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    )
     await callback.answer()
+
+
+@router.message(lambda message: message.web_app_data, ConversationStates.waiting_for_stuff_webapp_data)
+async def web_app_data_processing(message: Message, state: FSMContext):
+    await state.set_state(ConversationStates.waiting_for_stuff_pickup_time)
+    await message.answer("Заявка на оплату " + str(message.web_app_data.data) + ' рублей принята.' +
+                         '\n' + 'Во сколько хотите забрать снаряжение? Отправьте боту время в формате ЧЧ:ММ')
+
+
+@router.message(ConversationStates.waiting_for_stuff_pickup_time)
+async def cleaning_time_confirmation(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Спасибо, подготовим всё к " + message.text)
 
 
 @router.callback_query(F.data == "look_shedule")
@@ -179,15 +216,30 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 
 @router.callback_query(F.data == "cleaning_time")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Уборка запланирована")
+async def hire_button_handler(callback: types.CallbackQuery, state: FSMContext):
+    await state.set_state(ConversationStates.waiting_for_cleaning_time)
+    await callback.message.answer("Во сколько должен придти уборщик? Введите желаемое время в формате ЧЧ:ММ")
     await callback.answer()
+
+
+@router.message(ConversationStates.waiting_for_cleaning_time)
+async def cleaning_time_confirmation(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Спасибо, уборщик придёт в " + message.text)
+    # TODO: Добавить проверку вводимых данных
 
 
 @router.callback_query(F.data == "cleaning_comment")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Ваше мнение очень важно для нас")
+async def hire_button_handler(callback: types.CallbackQuery, state: FSMContext):
+    await state.set_state(ConversationStates.waiting_for_cleaning_comment)
+    await callback.message.answer("Напишите боту сообщение с комментарием и мы обязательно его прочитаем")
     await callback.answer()
+
+
+@router.message(ConversationStates.waiting_for_cleaning_comment)
+async def cleaning_time_confirmation(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Спасибо, Ваше мнение очень важно для нас!")
 
 
 @router.callback_query(F.data == "make_food_order")

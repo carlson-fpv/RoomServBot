@@ -37,7 +37,7 @@ async def start_handler(msg: Message):
     await msg.answer_photo(hotel_img)
     builder = InlineKeyboardBuilder()
     builder.button(
-        text="Бронь номер",
+        text="Бронь номера",
         callback_data="hire_room"
     )
 

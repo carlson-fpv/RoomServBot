@@ -5,6 +5,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+from aiogram.utils.media_group import MediaGroupBuilder
 from datetime import datetime
 from calendar import monthrange
 
@@ -18,6 +19,7 @@ month_name = {1: "Январь", 2: "Февраль", 3: "Март", 4: "Апр�
 
 restaurant_app = WebAppInfo(url='https://ahotelpoint.ru/restaurant.html')
 stuff_app = WebAppInfo(url='https://ahotelpoint.ru/stuff.html')
+map_app = WebAppInfo(url='https://ahotelpoint.ru/map.html')
 
 
 class ConversationStates(StatesGroup):
@@ -33,12 +35,12 @@ class ConversationStates(StatesGroup):
 @router.message(Command("start"))
 # Асинхронный вызов ответа на команду "/start"
 async def start_handler(msg: Message):
-    hotel_img = FSInputFile("media/hotel.jpg")
+    hotel_img = FSInputFile("web_app/public/img/reseption.png")
     await msg.answer_photo(hotel_img)
     builder = InlineKeyboardBuilder()
     builder.button(
         text="Бронь номера",
-        callback_data="hire_room"
+        callback_data="choose_room"
     )
 
     builder.button(
@@ -66,30 +68,121 @@ async def start_handler(msg: Message):
         callback_data="entertainment"
     )
     builder.adjust(2, 2)
-    await msg.answer("Отель Кировакан находится в самом центре города Ванадзор.\n"
-                     "Соответствуя высоким стандартам, отель предлагает условия для полноценного отдыха: "
-                     "комфортабельные номера, начиная от категорий standart (Single/Double), заканчивая superior "
-                     "(deluxe , family suite), а также шикарный интерьер, просторную территорию, широкий спектр услуг "
-                     "(платных и бесплатных), вкуснейшую кухню с разнообразным ассортиментом еды.",
+    await msg.answer("Загородный комплекс отдыха Залесье - это вариант отдыха на любой сезон. "
+                     "Соответствуя высоким стандартам наш комплекс предлагает для вас различные варианты отдыха: "
+                     "комфортабельные номера в главном корпусе (одиночный, семейный или люкс), "
+                     "индивидуальные виллы вдоль реки и небольшие шале в сосновом лесу.\n"
+                     "На территории отеля вы встретите бассейн и выход к реке с закрытым пляжем, можете попариться в "
+                     "банном комплексе или расслабиться в спа.\nРесторан \"Елки\" находится в одном из самых "
+                     "живописных уголков территории отеля - в сосновом бору на побережье озера и предложит вам "
+                     "самые изысканные блюда.\nНаш отель предлагает широкий спектр услуг для полноценного "
+                     "отдыха (активного и пассивного): путешествия на лодках, сапах по реке, аренда велосипедов, "
+                     "электро-мотоциклов и квадроциклов, а зимой - лыжи, тюбинг, снегоходы.\nВокруг отеля вас ждут "
+                     "туристические маршруты по живописным местам, запутанные и увлекательные квесты и многое другое.",
                      reply_markup=builder.as_markup()
-    )
+                     )
 
 
-@router.callback_query(F.data == "hire_room")
-async def hire_button_handler(callback: types.CallbackQuery):
-    room_img = FSInputFile("media/rooms/room_1.jpg")
-    await callback.message.answer_photo(room_img)
+@router.callback_query(F.data == "choose_room")
+async def choose_room_handler(callback: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
-    builder.button(
-        text="Выбрать даты",
-        callback_data="choose_dates_1"
+    builder.button(text="Однокомнатный номер", callback_data="single_room_show")
+    builder.button(text="Двухкомнатный номер", callback_data="double_room_show")
+    builder.button(text="Домик", callback_data="house_show")
+    builder.button(text="Шале", callback_data="shale_show")
+    builder.adjust(1)
+    await callback.message.answer("Какой тип номера Вы предпочитаете?", reply_markup=builder.as_markup())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "single_room_show")
+async def single_room_show_handler(callback: types.CallbackQuery):
+    single_room_img = FSInputFile("web_app/public/img/single_room.jpg")
+    await callback.message.answer_photo(single_room_img)
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Выбрать даты", callback_data="choose_dates_1")
+    await callback.message.answer(text="Уютный и функциональный номер. "
+                                       "Здесь есть все необходимое для комфортного отдыха и работы.\n"
+                                       "Вместимость до 2х Гостей, Общая площадь - 21 м2",
+                                  reply_markup=builder.as_markup())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "double_room_show")
+async def single_room_show_handler(callback: types.CallbackQuery):
+    album_builder = MediaGroupBuilder()
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/double_room_1.jpg")
     )
-    '''
-    builder.button(
-        text="Забронировать",
-        callback_data="final_hire_1"
-    )'''
-    await callback.message.answer("Двухместный номер. Раздельные кровати, холодильник, минибар.",
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/double_room_2.jpg")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/double_room_3.jpg")
+    )
+    await callback.message.answer_media_group(media=album_builder.build())
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Выбрать даты", callback_data="choose_dates_1")
+    await callback.message.answer(text="Двухкомнатный семейный номер с элегантным интерьером и спокойной цветовой "
+                                       "гаммой – это прекрасный выбор для Гостей, которые ценят безупречность и "
+                                       "внимание к деталям. Вместимость до 4х Гостей. Общая площадь 41 м2",
+                                  reply_markup=builder.as_markup())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "house_show")
+async def house_show_handler(callback: types.CallbackQuery):
+    album_builder = MediaGroupBuilder()
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/house_1.png")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/house_2.png")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/house_3.png")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/house_4.png")
+    )
+    await callback.message.answer_media_group(media=album_builder.build())
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Выбрать даты", callback_data="choose_dates_1")
+    await callback.message.answer(text="Двухэтажный домик для 2-4 человек с огромным панорамным окном, террасой, "
+                                       "видом на лес и озеро. И всепогодной беседкой для гриля.",
+                                  reply_markup=builder.as_markup())
+    await callback.answer()
+
+
+@router.callback_query(F.data == "shale_show")
+async def single_room_show_handler(callback: types.CallbackQuery):
+    album_builder = MediaGroupBuilder()
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/shale_1.jpg")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/shale_2.jpg")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/shale_3.jpg")
+    )
+    await callback.message.answer_media_group(media=album_builder.build())
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Выбрать даты", callback_data="choose_dates_1")
+    await callback.message.answer(text="Шале 42 кв. м с большой террасой 22 кв. м. Рассчитано до 3-х взрослых людей. "
+                                       "Дровяной камин с большим запасом дров, набор для разведения огня. "
+                                       "На террасе расположена горячая купель из лиственницы диаметром 1.6 метра "
+                                       "метра, рассчитанная на 2-3 взрослых человека.",
                                   reply_markup=builder.as_markup())
     await callback.answer()
 
@@ -242,45 +335,9 @@ async def cleaning_time_confirmation(message: Message, state: FSMContext):
     await message.answer("Спасибо, Ваше мнение очень важно для нас!")
 
 
-@router.callback_query(F.data == "make_food_order")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Ваш заказ принят")
-    await callback.answer()
-
-
-@router.callback_query(F.data == "food_payment")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Оплата принята")
-    await callback.answer()
-
-
 @router.callback_query(F.data == "leave_a_tip")
 async def hire_button_handler(callback: types.CallbackQuery):
     await callback.message.answer("Благодарим за чаевые")
-    await callback.answer()
-
-
-@router.callback_query(F.data == "bike_hire")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Велосипед забронирован")
-    await callback.answer()
-
-
-@router.callback_query(F.data == "boat_hire")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Лодка забронирована")
-    await callback.answer()
-
-
-@router.callback_query(F.data == "scooter_hire")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Самокат забронирован")
-    await callback.answer()
-
-
-@router.callback_query(F.data == "ski_hire")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Лыжи забронированы")
     await callback.answer()
 
 
@@ -292,13 +349,20 @@ async def hire_button_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "starbucks_uphill")
 async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("")
+    await callback.message.answer("Данный маршрут находится в разработке")
     await callback.answer()
 
 
 @router.callback_query(F.data == "town_hills")
-async def hire_button_handler(callback: types.CallbackQuery):
-    await callback.message.answer("Данный маршрут находится в разработке")
+async def food_button_handler(callback: types.CallbackQuery):
+    hills_route = FSInputFile("web_app/public/img/hills_route.png")
+    await callback.message.answer_photo(hills_route)
+    builder = InlineKeyboardBuilder()
+    builder.button(text='Посмотреть маршрут', web_app=map_app)
+    builder.button(text='Назад', callback_data='entertainment')
+
+    await callback.message.answer("Предлагаем ознакомиться с маршрутом, для этого нажмите кнопку ниже",
+                                  reply_markup=builder.as_markup())
     await callback.answer()
 
 

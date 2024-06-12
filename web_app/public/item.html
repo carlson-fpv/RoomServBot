@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/item_style.css?v=2">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="item_name"></h1>
+        <img id="item_image" src="" alt="Item image" class="img">
+        <p id="item_description" class="description"></p>
+        <!--<p id="item_price" class="price"></p>-->
+        <button class="btn" id="item_price"></button>
+            <div class="quanity_controls" id="item_qc">
+                <button class="btn" id="item_decrement">-</button>
+                <span id="item_counter"></span>
+                <button class="btn" id="item_increment">+</button>
+            </div>
+        <button class="btn" id="apply_btn">Подтвердить</button>
+    </div>
+    <script src="js/item_app.js?v=1"></script>
+</body>
+</html>

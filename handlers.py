@@ -60,7 +60,7 @@ async def start_handler(msg: Message):
 
     builder.button(
         text="Афиша",
-        callback_data="look_shedule"
+        callback_data="look_schedule"
     )
 
     builder.button(
@@ -97,8 +97,20 @@ async def choose_room_handler(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "single_room_show")
 async def single_room_show_handler(callback: types.CallbackQuery):
-    single_room_img = FSInputFile("web_app/public/img/single_room.jpg")
-    await callback.message.answer_photo(single_room_img)
+    album_builder = MediaGroupBuilder()
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/single_room_1.jpg")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/single_room_2.jpg")
+    )
+    album_builder.add(
+        type="photo",
+        media=FSInputFile("web_app/public/img/single_room_3.jpg")
+    )
+    await callback.message.answer_media_group(media=album_builder.build())
     builder = InlineKeyboardBuilder()
     builder.button(text="Выбрать даты", callback_data="choose_dates_1")
     await callback.message.answer(text="Уютный и функциональный номер. "
@@ -255,17 +267,18 @@ async def cleaning_time_confirmation(message: Message, state: FSMContext):
     await message.answer("Спасибо, подготовим всё к " + message.text)
 
 
-@router.callback_query(F.data == "look_shedule")
+@router.callback_query(F.data == "look_schedule")
 async def hire_button_handler(callback: types.CallbackQuery):
-    event_img = FSInputFile("media/poster/event_1.jpg")
+    event_img = FSInputFile("web_app/public/img/schedule.jpg")
     await callback.message.answer_photo(event_img)
     builder = InlineKeyboardBuilder()
     builder.button(
         text="Пойду!",
         callback_data="register_in_event"
     )
-    await callback.message.answer('В среду 1 мая в Ботаническом саду Ванадзора состоится '
-                                  'спортивный праздник для детей: "Весёлые старты"!', reply_markup=builder.as_markup())
+    await callback.message.answer('Сегодня в 21:00 пройдет большой кинопоказ в летнем кинотеатре. Вас ждет '
+                                  'новинка 2024 года, а также горячий попкорн и прохладительные напитки.',
+                                  reply_markup=builder.as_markup())
     await callback.answer()
 
 

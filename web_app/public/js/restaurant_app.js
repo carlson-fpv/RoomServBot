@@ -4,8 +4,16 @@ let tg = window.Telegram.WebApp;
 
 tg.MainButton.text.Color = '#FFFFFF';
 tg.MainButton.color = '#2cab37';
-//tg.BackButton.show();
+tg.BackButton.show();
+tg.BackButton.onClick(back_button_callback);
 
+const url_param = new URLSearchParams(window.location.search);
+var amount = url_param.get('amount');
+if (amount > 0) {
+      tg.MainButton.setText('Оплатить ' + amount + 'р');
+      tg.MainButton.show();
+}
+/*
 var items_count = [0, 0, 0];
 var items_costs = [400, 150, 700];
 var amount = 0;
@@ -143,8 +151,23 @@ item_2_incr_btn.addEventListener('click', function() {
   document.getElementById('item_2_counter').innerHTML = items_count[2];
   tg.MainButton.setText('Оплатить ' + amount + 'P');
 });
+*/
 
 Telegram.WebApp.onEvent('mainButtonClicked', function() {
   console.log("Preparing to send amout=" + amount);
   tg.sendData(amount.toString());
 });
+
+const items = document.querySelectorAll('.item');
+
+items.forEach(item => {
+  item.addEventListener('click', () => {
+    const itemID = item.getAttribute('id');
+    console.log('Attaching this id at URL: ', itemID);
+    window.location.href = 'item.html?id=' + itemID + '&amount=' + amount;
+  });
+});
+
+function back_button_callback() {
+  tg.close();
+};

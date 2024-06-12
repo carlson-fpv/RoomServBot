@@ -6,16 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const url_param = new URLSearchParams(window.location.search);
   const item_id = url_param.get('id');
+  const app_type = url_param.get('type');
+  console.log(app_type);
   var total_amount = url_param.get('amount');
   //console.log('amount: ', total_amount, ' ', total_amount > 0, ' ', typeof(total_amount));
   var price = 0;
   var temp_amount = 0;
   if (total_amount == 'null') {
     total_amount = 0;
-    console.log(typeof(total_amount));
+    //console.log(typeof(total_amount));
   } else {
     total_amount = parseInt(total_amount);
-    console.log(typeof(total_amount));
+    //console.log(typeof(total_amount));
   }
   var count = 0;
   const item_btn = document.getElementById('item_price');
@@ -26,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const apply_btn = document.getElementById('apply_btn');
   const apply_btn_class = document.querySelector('.btn#apply_btn');
 
-
-  fetch('../data/restaurant/items.json')
+  fetch('../data/' + app_type + '/items.json')
     .then(response => response.json())
     .then(items => {
       const item = items.find(itm => itm.id == item_id);
@@ -73,10 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     apply_btn.addEventListener('click', () => {
       temp_amount += total_amount;
-      window.location.href = 'restaurant.html?amount=' + temp_amount;
+      window.location.href = 'magazine.html?amount=' + temp_amount + '&type=' + app_type;
     });
 
     function back_button_callback() {
-      window.location.href = 'restaurant.html';
+      temp_amount += total_amount;
+      window.location.href = 'magazine.html?amount=' + temp_amount + '&type=' + app_type;
     };
 });

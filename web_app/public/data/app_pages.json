@@ -1,0 +1,26 @@
+[
+  {
+    "type": "restaurant",
+    "item_0_name": "Солянка",
+    "item_0_price": 400,
+    "item_0_img": "img/solyanka.png",
+    "item_1_name": "Картофель",
+    "item_1_price": 150,
+    "item_1_img": "img/potato.png",
+    "item_2_name": "Шницель",
+    "item_2_price": 700,
+    "item_2_img": "img/schnitzel.png"
+  },
+    {
+    "type": "stuff",
+    "item_0_name": "Велосипед",
+    "item_0_price": 300,
+    "item_0_img": "img/bike.png",
+    "item_1_name": "Лодка",
+    "item_1_price": 100,
+    "item_1_img": "img/boat.png",
+    "item_2_name": "Сапборд",
+    "item_2_price": 200,
+    "item_2_img": "img/sup.png"
+  }
+]

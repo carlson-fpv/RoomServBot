@@ -2,8 +2,10 @@ body {
   margin: 0;
   padding: 0;
   font-size: 18px;
-  color: var(--tg-theme-text-color);
-  background: var(--tg-theme-bg-color);
+  #color: var(--tg-theme-text-color);
+  #background: var(--tg-theme-bg-color);
+  color: #000000;
+  background: #ffffff;
 }
 
 .container {
@@ -35,7 +37,7 @@ body {
   border: none;
   background: rgb(248, 168, 24);
   border-radius: 10px;
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
   font-weight: 700;
   transition: background .2s linear;

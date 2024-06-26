@@ -17,9 +17,9 @@ month_name = {1: "Январь", 2: "Февраль", 3: "Март", 4: "Апр�
               5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
               9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"}
 
-restaurant_app = WebAppInfo(url='https://ahotelpoint.ru/magazine.html?type=restaurant')
-stuff_app = WebAppInfo(url='https://ahotelpoint.ru/magazine.html?type=stuff')
-map_app = WebAppInfo(url='https://ahotelpoint.ru/map.html')
+restaurant_app = WebAppInfo(url='https://ahotelpoint.ru/RoomServBot/web_app/public/magazine.html?type=restaurant')
+stuff_app = WebAppInfo(url='https://ahotelpoint.ru/RoomServBot/web_app/public/magazine.html?type=stuff')
+map_app = WebAppInfo(url='https://ahotelpoint.ru/RoomServBot/web_app/public/map.html')
 
 
 class ConversationStates(StatesGroup):

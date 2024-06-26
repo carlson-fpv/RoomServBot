@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const apply_btn = document.getElementById('apply_btn');
   const apply_btn_class = document.querySelector('.btn#apply_btn');
 
-  fetch('../data/' + app_type + '/items.json')
+  fetch('data/' + app_type + '/items.json')
     .then(response => response.json())
     .then(items => {
       const item = items.find(itm => itm.id == item_id);

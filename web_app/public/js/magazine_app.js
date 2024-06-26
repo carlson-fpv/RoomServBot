@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const url_param = new URLSearchParams(window.location.search);
   const app_type = url_param.get('type');
 
-  fetch('../data/app_pages.json')
+  fetch('data/app_pages.json')
     .then(response => response.json())
     .then(pages => {
       const page = pages.find(pge => pge.type == app_type);

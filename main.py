@@ -26,5 +26,5 @@ if __name__ == "__main__":
 	# Запуск логгирования
 	logging.basicConfig(level=logging.INFO)
 
-	# Асинхронный запуск инициализации боты
+	# Асинхронный запуск инициализации бота
 	asyncio.run(main())
